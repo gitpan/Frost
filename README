@@ -1,0 +1,46 @@
+Frost version 0.65
+===========================
+
+See the individual module documentation for more information
+
+INSTALLATION
+
+To install this module type the following:
+
+   perl Makefile.PL
+   make
+   make test
+   make install
+
+DEPENDENCIES
+
+This module requires these other modules and libraries:
+
+	Carp
+	Class::MOP
+	Data::Dumper
+	Data::UUID
+	DateTime::Format::MySQL
+	DB_File
+	Exporter
+	Fcntl
+	File::Path
+	IO::File
+	List::Util
+	Log::Log4perl
+	Moose
+	Storable
+	Test::Deep
+	Test::Exception
+	Tie::Cache::LRU::Array
+	Time::HiRes
+
+COPYRIGHT AND LICENCE
+
+Copyright (C) 2010 by Dienstleistung Kultur Ltd. & Co. KG
+
+http://dienstleistung-kultur.de/frost
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+

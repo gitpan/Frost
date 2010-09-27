@@ -1,0 +1,42 @@
+use 5.008008;
+use ExtUtils::MakeMaker;
+#	See lib/ExtUtils/MakeMaker.pm for details of how to influence
+#	the contents of the Makefile that is written.
+WriteMakefile
+(
+	NAME					=> 'Frost',
+	VERSION_FROM		=> 'lib/Frost.pm',	#	finds $VERSION
+	PREREQ_PM			=>
+	{
+		'Carp'									=> 1.04,
+		'Class::MOP'							=> 1.08,
+		'Data::Dumper'							=> 1.125,
+		'Data::UUID'							=> 1.202,
+		'DB_File'								=> 1.820,
+		'Exporter'								=> 0,
+		'Fcntl'									=> 1.05,
+		'File::Path'							=> 2.04,
+		'IO::File'								=> 0,
+		'Log::Log4perl'						=> 1.24,
+		'Moose'									=> 1.14,
+		'Storable'								=> 2.21,
+		'Tie::Cache::LRU'						=> 20081023.2116,
+		'Time::HiRes'							=> 1.9719,
+	#	test only:
+		'DateTime::Format::MySQL'			=> 0,
+		'List::Util'							=> 0,
+		'Test::Deep'							=> 0,
+		'Test::Exception'						=> 0,
+	},	#	e.g., Module::Name => 1.1
+	(
+		$] >= 5.005    # Add these new keywords supported since 5.005
+		?
+			(
+				ABSTRACT_FROM	=> 'lib/Frost.pm',		#	retrieve abstract from module
+				AUTHOR			=> 'Ernesto <ernesto@dienstleistung-kultur.de>',
+				LICENSE			=> 'perl',
+			)
+		:	()
+	),
+	test					=> { TESTS => 't/*/*.t', },
+);

@@ -1,0 +1,12 @@
+Revision history for Frost
+
+0.65 So. September 26, 2010
+	-	use Moose 1.14
+	-	clean up
+	-	semi-public release to mailing-list
+
+0.64 Fr. September 3, 2010
+	-	use Moose 1.12
+	-	apply_metaclass_roles -> apply_metaroles
+
+0.01 - 0.63 X-rated ;-)
