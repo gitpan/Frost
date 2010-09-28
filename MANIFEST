@@ -77,4 +77,5 @@ t/500_speed/201_burial_profile.t
 t/lib/100_frost_body.pm
 t/lib/Frost/Test.pm
 t/lib/Frost/TestPath.pm
+t/lib/Frost/TestSystem.pm
 META.yml                                 Module meta-data (added by MakeMaker)

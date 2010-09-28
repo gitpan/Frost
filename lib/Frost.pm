@@ -19,7 +19,7 @@ use Frost::Locum;
 
 #	CLASS VARS
 #
-our $VERSION	= 0.65;
+our $VERSION	= 0.66;
 our $AUTHORITY	= 'cpan:ERNESTO';
 
 #	CLASS INIT
@@ -796,9 +796,6 @@ object - i.e. because of applying a role at run-time - creates mutable
 objects blessed in an anonymous class. This destroys the silence/evoke
 mechanism, which depends on the real classname.
 
-For a similar reason the spaghetti example t/400_recipes/403_list.t
-does not work.
-
 So reblessing as well as make_mutable is VERBOTEN.
 
 =head2 Thou shalt not weaken thy reference
@@ -866,20 +863,36 @@ This module requires these other modules and libraries:
 	Class::MOP
 	Data::Dumper
 	Data::UUID
-	DateTime::Format::MySQL
 	DB_File
 	Exporter
 	Fcntl
 	File::Path
 	IO::File
-	List::Util
 	Log::Log4perl
 	Moose
 	Storable
+	Tie::Cache::LRU
+	Time::HiRes
+
+For testing these modules are needed:
+
+	DateTime::Format::MySQL
+	List::Util
 	Test::Deep
 	Test::Exception
-	Tie::Cache::LRU::Array
-	Time::HiRes
+	Test::More
+
+Optional modules to run some tests:
+
+	Devel::Size
+	Sys::MemInfo
+	Declare::Constraints::Simple
+	Regexp::Common
+	Locale::US
+
+Modules not used yet:
+
+	Scalar::Util
 
 Please see Makefile.PL for required versions.
 

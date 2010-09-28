@@ -27,6 +27,15 @@ WriteMakefile
 		'List::Util'							=> 0,
 		'Test::Deep'							=> 0,
 		'Test::Exception'						=> 0,
+		'Test::More'							=> 0,
+	#	checked in test -> skip:
+	#	'Devel::Size'							=> 0.71,
+	#	'Sys::MemInfo'							=> 0.91,
+	#	'Declare::Constraints::Simple'	=> 0,
+	#	'Regexp::Common'						=> 0,
+	#	'Locale::US'							=> 0,
+	#	not used:
+	#	'Scalar::Util'							=> 0,
 	},	#	e.g., Module::Name => 1.1
 	(
 		$] >= 5.005    # Add these new keywords supported since 5.005
@@ -40,3 +49,17 @@ WriteMakefile
 	),
 	test					=> { TESTS => 't/*/*.t', },
 );
+
+
+
+
+
+
+
+
+
+
+
+
+
+

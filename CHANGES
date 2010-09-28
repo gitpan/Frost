@@ -1,5 +1,29 @@
 Revision history for Frost
 
+0.66 Tu. September 28, 2010
+	-	double checking Makefile.PL again
+	-	tests
+		-	FIXED
+			t/400_recipes/104_company.t got confused by missing modules
+		-	WORKAROUND
+			-	warnings on FreeBSD:
+				in t/lib/Frost::Test
+					cat: /proc/cpuinfo: No such file or directory
+					cat: /proc/meminfo: No such file or directory
+				NEW: t/lib/Frost::TestSystem
+					has now all subs TF_* and is only loaded by
+						t/500_speed/201_burial_profile.t
+						t/500_speed/200_burial_speed.t
+					won't run on FreeBSD,
+					but will install (fingers crossed ;-)
+		-	TODO
+			-	failed on FreeBSD:
+				unexpected bugs in
+					t/200_basic/041_illuminator_iterate.t
+					t/200_basic/042_illuminator_find.t
+					t/200_basic/070_asylum.t
+					t/200_basic/071_asylum_find.t
+
 0.65 So. September 26, 2010
 	-	use Moose 1.14
 	-	clean up

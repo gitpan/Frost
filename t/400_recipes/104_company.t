@@ -5,14 +5,7 @@ use strict;
 
 use lib		't/lib',		'lib';
 
-use Frost::Test;
-
-use Test::More tests => 146;
-#use Test::More		'no_plan';
-
-use Frost::Asylum;
-
-#	from Moose-0.87/t/000_recipes/moose_cookbook_basics_recipe4.t
+use Test::More;
 
 # =begin testing SETUP
 BEGIN
@@ -20,11 +13,19 @@ BEGIN
 	eval		'use Regexp::Common; use Locale::US;';
 	if ($@)
 	{
-		diag		'Regexp::Common & Locale::US required for this test';
-		ok(1);
-		exit 0;
+		plan skip_all	=> 'Regexp::Common & Locale::US required for this test';
+	}
+	else
+	{
+		plan tests => 146;
 	}
 }
+
+use Frost::Test;
+
+use Frost::Asylum;
+
+#	from Moose-0.87/t/000_recipes/moose_cookbook_basics_recipe4.t
 
 diag "Running a company...";
 

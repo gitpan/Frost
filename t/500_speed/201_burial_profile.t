@@ -29,6 +29,7 @@ BEGIN
 }
 
 use Frost::Test;
+use Frost::TestSystem;
 
 use Frost::Asylum;
 
