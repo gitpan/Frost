@@ -19,23 +19,25 @@ WriteMakefile
 		'IO::File'								=> 0,
 		'Log::Log4perl'						=> 1.24,
 		'Moose'									=> 1.14,
+		'Scalar::Util'							=> 0,
 		'Storable'								=> 2.21,
 		'Tie::Cache::LRU'						=> 20081023.2116,
 		'Time::HiRes'							=> 1.9719,
 	#	test only:
 		'DateTime::Format::MySQL'			=> 0,
 		'List::Util'							=> 0,
+		'List::MoreUtils'						=> 0,
 		'Test::Deep'							=> 0,
+		'Test::Differences'					=> 0,
 		'Test::Exception'						=> 0,
-		'Test::More'							=> 0,
+		'Test::More'							=> 0.88,		#	done_testing...
+		'Test::Requires'						=> 0,
 	#	checked in test -> skip:
 	#	'Devel::Size'							=> 0.71,
 	#	'Sys::MemInfo'							=> 0.91,
 	#	'Declare::Constraints::Simple'	=> 0,
 	#	'Regexp::Common'						=> 0,
 	#	'Locale::US'							=> 0,
-	#	not used:
-	#	'Scalar::Util'							=> 0,
 	},	#	e.g., Module::Name => 1.1
 	(
 		$] >= 5.005    # Add these new keywords supported since 5.005

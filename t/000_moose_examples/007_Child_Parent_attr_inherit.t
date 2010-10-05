@@ -12,6 +12,13 @@ use Test::More tests => 41;
 
 use Frost::Asylum;
 
+=pod
+
+Some examples of triggers and how they can
+be used to manage parent-child relationships.
+
+=cut
+
 #	from Moose-0.87/t/200_examples/007_Child_Parent_attr_inherit.t
 
 {

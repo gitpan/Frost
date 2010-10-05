@@ -17,7 +17,7 @@ package main;
 use strict;
 use warnings;
 
-use Test::More;
+use Test::More 0.88;		#	done_testing...
 use Test::Exception;
 use Test::Deep;
 

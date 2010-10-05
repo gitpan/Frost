@@ -105,9 +105,14 @@ The script L<frosttest|"scripts/frosttest"> exports following environment vars:
 
 =head1 RECIPES
 
-B<TO DO>
+B<TO DO: DOCS>
 
-For now, please have a look at the sources in t/, especially in t/400_recipes.
+For now, please have a look at the sources in t/, especially in
+t/000_moose_examples, t/000_moose_recipes and t/400_recipes.
+
+t/000_moose_examples and t/000_moose_recipes provides the same examples and recipes
+as L<Moose::Cookbook>, some already decorated with Frost's persistence voodoo, while
+t/400_recipes shows homebrewed stuff like circles, loops, trees and meshes.
 
 =head1 GETTING HELP
 

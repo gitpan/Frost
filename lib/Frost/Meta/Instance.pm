@@ -90,7 +90,7 @@ sub strengthen_slot_value
 }
 
 #	Is there a use case beside the esoteric example in
-#	Moose-0.87/t/000_recipes/moose_cookbook_roles_recipe3.t	?
+#	Moose-1.14/t/000_recipes/moose_cookbook_roles_recipe3.t	?
 #
 sub rebless_instance_structure
 {
@@ -153,7 +153,7 @@ sub inline_strengthen_slot_value
 }
 
 #	Is there a use case beside the esoteric example in
-#	Moose-0.87/t/000_recipes/moose_cookbook_roles_recipe3.t	?
+#	Moose-1.14/t/000_recipes/moose_cookbook_roles_recipe3.t	?
 #
 sub inline_rebless_instance_structure
 {

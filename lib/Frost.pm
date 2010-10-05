@@ -19,7 +19,7 @@ use Frost::Locum;
 
 #	CLASS VARS
 #
-our $VERSION	= 0.66;
+our $VERSION	= 0.67;
 our $AUTHORITY	= 'cpan:ERNESTO';
 
 #	CLASS INIT
@@ -870,6 +870,7 @@ This module requires these other modules and libraries:
 	IO::File
 	Log::Log4perl
 	Moose
+	Scalar::Util
 	Storable
 	Tie::Cache::LRU
 	Time::HiRes
@@ -878,7 +879,9 @@ For testing these modules are needed:
 
 	DateTime::Format::MySQL
 	List::Util
+	List::MoreUtils
 	Test::Deep
+	Test::Differences
 	Test::Exception
 	Test::More
 
@@ -889,10 +892,6 @@ Optional modules to run some tests:
 	Declare::Constraints::Simple
 	Regexp::Common
 	Locale::US
-
-Modules not used yet:
-
-	Scalar::Util
 
 Please see Makefile.PL for required versions.
 

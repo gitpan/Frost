@@ -11,8 +11,7 @@ use Test::More;
 
 BEGIN
 {
-	plan skip_all => 'reblessing is VERBOTEN';
-#	plan 'no_plan';
+	plan skip_all => 'TODO: No dynamic roles with Frost yet';
 }
 
 #	Applying a role at run-time creates an __ANON__ class
@@ -126,3 +125,7 @@ use Frost::Asylum;
 
 	lives_ok	{ $ASYL->close;	}	'Asylum closed and saved';
 }
+
+
+done_testing;
+

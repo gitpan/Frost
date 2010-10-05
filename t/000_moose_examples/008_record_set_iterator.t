@@ -107,7 +107,7 @@ use Frost::Asylum;
 		$self->current_record($self->record_set->next());
 	}
 
-	no Frost;
+	no Moose;
 
 	__PACKAGE__->meta->make_immutable()		unless $::MAKE_MUTABLE;
 }

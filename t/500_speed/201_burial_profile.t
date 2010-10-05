@@ -42,9 +42,9 @@ $DEFAULT_MAX_ID		= 1000;		#	NYTProf enough for profiling...
 our $CACHE_COUNT		= 20_000;	#	default
 #$CACHE_COUNT			= 11_000;
 
-our $EXP_CREATE	=  1_800;		#	objects / sec
+our $EXP_CREATE	=  2_600;	#	objects / sec
 our $EXP_LOAD		=  2_700;
-our $EXP_CACHE		=  4_900;
+our $EXP_CACHE		=  4_300;
 #
 #########
 

@@ -1,17 +1,36 @@
 #!/bin/sh
 
-if [ ! -e "xxxnytprofhtml" ]
+echo "#"
+echo "# frostprof..."
+echo "#"
+
+PERL=`which 'perl'`
+NYTP=`which 'nytprofhtml'`
+
+if [ ! -e "$PERL" ]
 then
-	echo "Devel::NYTProf is NOT installed"
+	echo "perl not found"
 	echo "------------ ERROR ---------------------------------------------------"
 	exit 1
 fi
+
+if [ ! -e "$NYTP" ]
+then
+	echo "nytprofhtml not found"
+	echo "------------ ERROR ---------------------------------------------------"
+	exit 1
+fi
+
+echo "# using"
+echo "# $PERL"
+echo "# $NYTP"
+echo "#"
 
 DEBUG=
 LOCK_TEST=
 MAKE_MUTABLE=
 NO_DIE_WARN=
-PATH='500_speed/201_buxxxrial_profile.t'
+PATH='500_speed/201_burial_profile.t'
 SPEED_TEST=1
 TEST_PATH='../t'
 VERBOSE=
@@ -25,9 +44,6 @@ do
 	esac
 done
 
-echo "#"
-echo "# frostprof..."
-echo "#"
 echo "------------ PARAM ---------------------------------------------------"
 echo "VERBOSE      = $VERBOSE"
 echo "DEBUG        = $DEBUG"
@@ -54,12 +70,12 @@ export Frost_SPEED=$SPEED_TEST
 
 cd $TEST_PATH
 
-perl -d:NYTProf -I../lib $PATH
+$PERL -d:NYTProf -I../lib $PATH
 
 echo "----------------------------------------------------------------------"
 echo "Creating HTML pages..."
 
-nytprofhtml
+$NYTP
 
 
 echo "------------ DONE ----------------------------------------------------"
