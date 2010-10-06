@@ -5,6 +5,8 @@ use strict;
 
 use lib 't/lib', 'lib';
 
+use Frost::Test;
+
 use Test::More;
 
 #	equals t/500_speed/200_burial_speed.t, differences marked with NYTProf
@@ -28,7 +30,6 @@ BEGIN
 	use_ok	'IO::File';
 }
 
-use Frost::Test;
 use Frost::TestSystem;
 
 use Frost::Asylum;

@@ -18,7 +18,7 @@ use Frost::Util;
 
 #	CLASS VARS
 #
-our $VERSION	= 0.62;
+our $VERSION	= 0.68;
 our $AUTHORITY	= 'cpan:ERNESTO';
 
 #	CLASS METHODS
@@ -113,10 +113,18 @@ sub open
 
 	$info->{'flags'} 		= R_DUP						unless $self->unique;
 	$info->{'cachesize'}	= $self->cachesize;
-	$info->{'compare'}	= \&_numeric_compare		if $self->numeric;
-
+#	$info->{'compare'}	= \&_numeric_compare		if $self->numeric;
+#
 	my $dbm_object		= tie %dbm_hash, "DB_File", $filename, $flags, $mode, $info
 											or die "Cannot open $filename: $!\n";
+
+	if ( $self->numeric )
+	{
+		no warnings;		#	$_ might be undef !!!
+
+		$dbm_object->filter_fetch_key  ( sub { $_ = unpack	("i", $_) } );
+		$dbm_object->filter_store_key  ( sub { $_ = pack	("i", $_) } );
+	}
 
 	$self->_dbm_hash		( \%dbm_hash );
 	$self->_dbm_object	( $dbm_object );
@@ -554,7 +562,7 @@ sub _match_key
 #s	All methods are only called internally, so all checks removed
 #s	except from count and _seq !
 #s
-sub _numeric_compare	{ $_[0] <=> $_[1] }
+#	sub _numeric_compare	{ $_[0] <=> $_[1] }
 
 #	IMMUTABLE
 #
@@ -689,9 +697,13 @@ Abstract method - overwrite.
 
 =head2 _match_key
 
-=head1 CALLBACKS
+=cut
 
-=head2 _numeric_compare
+#	=head1 CALLBACKS
+#
+#	=head2 _numeric_compare
+
+=pod
 
 =for comment IMMUTABLE
 

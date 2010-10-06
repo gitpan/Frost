@@ -5,6 +5,8 @@ use strict;
 
 use lib		't/lib',		'lib';
 
+use Frost::Test;
+
 use Test::More;
 
 # =begin testing SETUP
@@ -20,8 +22,6 @@ BEGIN
 		plan tests => 146;
 	}
 }
-
-use Frost::Test;
 
 use Frost::Asylum;
 

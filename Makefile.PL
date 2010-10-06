@@ -6,6 +6,9 @@ WriteMakefile
 (
 	NAME					=> 'Frost',
 	VERSION_FROM		=> 'lib/Frost.pm',	#	finds $VERSION
+	ABSTRACT_FROM		=> 'lib/Frost.pm',		#	retrieve abstract from module
+	AUTHOR				=> 'Ernesto <ernesto@dienstleistung-kultur.de>',
+	LICENSE				=> 'perl',
 	PREREQ_PM			=>
 	{
 		'Carp'									=> 1.04,
@@ -39,29 +42,7 @@ WriteMakefile
 	#	'Regexp::Common'						=> 0,
 	#	'Locale::US'							=> 0,
 	},	#	e.g., Module::Name => 1.1
-	(
-		$] >= 5.005    # Add these new keywords supported since 5.005
-		?
-			(
-				ABSTRACT_FROM	=> 'lib/Frost.pm',		#	retrieve abstract from module
-				AUTHOR			=> 'Ernesto <ernesto@dienstleistung-kultur.de>',
-				LICENSE			=> 'perl',
-			)
-		:	()
-	),
 	test					=> { TESTS => 't/*/*.t', },
+	PL_FILES				=> {'check_db.PL' => 'check_db'},
 );
-
-
-
-
-
-
-
-
-
-
-
-
-
 

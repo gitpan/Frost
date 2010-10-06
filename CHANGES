@@ -1,5 +1,10 @@
 Revision history for Frost
 
+0.68 We. October 6, 2010
+	-	Frost::Burial
+		removed sub _numeric_compare
+		added filter_*
+
 0.67 Su. October 3, 2010
 	-	Scalar::Util back in Makefile.PL, corrected doc in Frost
 	-	show version of underlying Berkeley DB in t/100_meta/000_version.t

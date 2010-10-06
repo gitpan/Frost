@@ -1,4 +1,5 @@
 CHANGES
+check_db.PL
 lib/Frost.pm
 lib/Frost/Asylum.pm
 lib/Frost/Burial.pm

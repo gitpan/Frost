@@ -5,8 +5,6 @@ use strict;
 
 use lib 't/lib', 'lib';
 
-use Frost::Test;
-
 use Test::More tests => 1;
 #use Test::More 'no_plan';
 

@@ -5,6 +5,8 @@ use warnings;
 
 use lib 't/lib', 'lib';
 
+use Frost::Test;
+
 use Test::More;
 
 BEGIN
@@ -35,8 +37,6 @@ our $MAX_ID		= 20_000;
 $MAX_ID		= 10_000;
 #
 #########
-
-use Frost::Test;
 
 use Frost::Asylum;
 

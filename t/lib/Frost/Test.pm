@@ -25,6 +25,15 @@ use Frost::Util;
 
 use Frost::TestPath;
 
+#	ok, works!
+#
+#	use DB_File;
+#
+#	BEGIN
+#	{
+#		plan skip_all => 'Need BerkeleyDB version 4.0, this is only ' . $DB_File::db_version		if $DB_File::db_version < 44;
+#	}
+
 our $MAKE_MUTABLE	= $ENV{Frost_MAKE_MUTABLE};
 
 diag ( "\n>>>>>>>>>>>>>>> MUTABLE TEST! <<<<<<<<<<<<<<<\n" )		if $MAKE_MUTABLE;

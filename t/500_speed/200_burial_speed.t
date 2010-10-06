@@ -5,6 +5,8 @@ use strict;
 
 use lib 't/lib', 'lib';
 
+use Frost::Test;
+
 use Test::More;
 
 BEGIN
@@ -24,7 +26,6 @@ BEGIN
 	use_ok	'IO::File';
 }
 
-use Frost::Test;
 use Frost::TestSystem;
 
 use Frost::Asylum;
