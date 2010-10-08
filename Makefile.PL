@@ -43,6 +43,6 @@ WriteMakefile
 	#	'Locale::US'							=> 0,
 	},	#	e.g., Module::Name => 1.1
 	test					=> { TESTS => 't/*/*.t', },
-	PL_FILES				=> {'check_db.PL' => 'check_db'},
+#	PL_FILES				=> {'check_db.PL' => 'check_db'},
 );
 
