@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               Frost
-version:            0.69_02
+version:            0.69_03
 abstract:           Feasible Referential Object STorage
 author:
     - Ernesto <ernesto@dienstleistung-kultur.de>

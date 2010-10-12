@@ -75,7 +75,7 @@ sub _build__necromancer
 #
 sub DEMOLISH
 {
-	#IS_DEBUG and DEBUG "( @_ )";
+	#print STDERR __PACKAGE__ . "::DEMOLISH ( @_ )\n";
 
 	$_[0]->{_lock}				= undef;
 	$_[0]->{_twilight}		= undef;

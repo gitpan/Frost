@@ -1,16 +1,22 @@
 Revision history for Frost
 
+0.69_03	October 12, 2010
+	-	Frost::Burial
+		removed long forgotten call to close in DEMOLISH due to errors with BDB,
+		now really no longer autosave is provided!
+
 0.69_02	October 12, 2010
 	-	replaced DB_File with BerkeleyDB
 		many changes
-	-	Burial
+	-	Frost::Burial
 		new attribute _dbm_cursor
-	-	Types
+		removed BerkeleyDB::Btree::filter_*, added -Compare
+	-	Frost::Types
 		new subtype 'Frost::DBM_Cursor' -> 'BerkeleyDB::Cursor'
 
 0.69_01	October 8, 2010
 	-	removed check_db.PL from Makefile.PL to see,
-		if Frost::Burial::filter_* helps on *BSD with BDB 1.0
+		if DB_File::filter_* helps on *BSD with BDB 1.0
 
 0.68	October 6, 2010
 	-	Frost::Burial

@@ -63,6 +63,8 @@ sub BUILD
 #
 sub DEMOLISH
 {
+	#print STDERR __PACKAGE__ . "::DEMOLISH ( @_ )\n";
+
 	my $spirit	= $_[0]->_spirit;
 
 	$_[0]->{_lru}	= undef;

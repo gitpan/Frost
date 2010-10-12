@@ -97,7 +97,42 @@ sub BUILDARGS
 
 #	DESTRUCTORS
 #
-sub DEMOLISH	{ $_[0]->close(); }
+#	Autosave does SOMETIMES NOT work!
+#
+#	Frost::Burial::DEMOLISH ( Frost::Cemetery=HASH(0x9f432e0) 1 )
+#	Frost::Burial::close
+#	$is_closed = 0;
+#	$filename = "/tmp/frost/Point/x.cem";
+#	$in_global_destruction = 1;
+#	Frost::Burial::save
+#	$is_closed = 0;
+#	$filename = "/tmp/frost/Point/x.cem";
+#	$in_global_destruction = 1;
+#	Frost::Burial::save B4 sync...
+#		(in cleanup) BerkeleyDB Aborting: Database is already closed at ../lib/Frost/Burial.pm line 217 during global destruction.
+#	 at ../lib/Frost/Burial.pm line 217
+#		Frost::Burial::save('Frost::Cemetery=HASH(0x9f432e0)', 1) called at ../lib/Frost/Burial.pm line 190
+#		Frost::Burial::close('Frost::Cemetery=HASH(0x9f432e0)', 1) called at ../lib/Frost/Burial.pm line 104
+#		Frost::Burial::DEMOLISH('Frost::Cemetery=HASH(0x9f432e0)', 1) called at generated method (unknown origin) line 7
+#		Class::MOP::Method::Generated::__ANON__() called at /usr/local/share/perl/5.10.0/Try/Tiny.pm line 76
+#		eval {...} called at /usr/local/share/perl/5.10.0/Try/Tiny.pm line 67
+#		Try::Tiny::try('CODE(0xa0f03d8)', 'Try::Tiny::Catch=REF(0x9f63628)') called at generated method (unknown origin) line 8
+#		Frost::Cemetery::DESTROY('Frost::Cemetery=HASH(0x9f432e0)') called at 000_moose_recipes/moose_cookbook_basics_recipe1.t line 0
+#		eval {...} called at 000_moose_recipes/moose_cookbook_basics_recipe1.t line 0
+#	 at generated method (unknown origin) line 8
+#		Class::MOP::Method::Generated::__ANON__('BerkeleyDB Aborting: Database is already closed at ../lib/Fro...') called at /usr/local/share/perl/5.10.0/Try/Tiny.pm line 98
+#		Try::Tiny::try('CODE(0xa0f03d8)', 'Try::Tiny::Catch=REF(0x9f63628)') called at generated method (unknown origin) line 8
+#		Frost::Cemetery::DESTROY('Frost::Cemetery=HASH(0x9f432e0)') called at 000_moose_recipes/moose_cookbook_basics_recipe1.t line 0
+#		eval {...} called at 000_moose_recipes/moose_cookbook_basics_recipe1.t line 0
+#
+#	sub DEMOLISH
+#	{
+#		print STDERR __PACKAGE__ . "::DEMOLISH ( @_ )\n";
+#
+#		$_[0]->close ( $_[1] || 0 );		#	in global destruction...
+#
+#		print STDERR __PACKAGE__ . "::DEMOLISH done\n\n";
+#	}
 
 #	PUBLIC METHODS
 #
@@ -142,9 +177,9 @@ sub is_closed		{ ( defined $_[0]->{_dbm_object} ) ? false : true }
 
 sub open
 {
-	#IS_DEBUG and DEBUG "( @_ )";
-
 	my ( $self )	= @_;
+
+	IS_DEBUG and DEBUG Dump [ $self->is_open, $self->filename ], [qw( is_open filename )];
 
 	return true		if $self->is_open;
 
@@ -172,11 +207,15 @@ sub open
 
 sub close
 {
-	my ( $self )	= @_;
+	#IS_DEBUG and DEBUG "( @_ )";
+
+	my ( $self, $igd )	= @_;
+
+	#print STDERR __PACKAGE__ . "::close", Dump [ $self->is_closed, $self->filename, $igd ], [qw( is_closed filename in_global_destruction )];
 
 	return true		if $self->is_closed;
 
-	$self->save();
+	$self->save ( $igd );
 
 	my $dbm_hash	= $self->_dbm_hash;
 
@@ -186,6 +225,8 @@ sub close
 
 	untie %$dbm_hash;
 
+	#print STDERR __PACKAGE__ . "::close done\n\n";
+
 	return true;
 }
 
@@ -193,13 +234,21 @@ sub save
 {
 	#IS_DEBUG and DEBUG "( @_ )";
 
-	my ( $self )	= @_;
+	my ( $self, $igd )	= @_;
+
+	#print STDERR __PACKAGE__ . "::save", Dump [ $self->is_closed, $self->filename, $igd ], [qw( is_closed filename in_global_destruction )];
 
 	return true			if $self->is_closed;
 
+	#print STDERR __PACKAGE__ . "::save B4 sync...\n";
+
 	my $status	= $self->_dbm_object->db_sync();
 
+	#print STDERR __PACKAGE__ . "::save AF sync... status=", ( $status ? $status : 'OK' ), "\n";
+
 	return false		if $status;
+
+	#print STDERR __PACKAGE__ . "::save done\n\n";
 
 	return true;
 }
@@ -710,7 +759,9 @@ Abstract method - overwrite.
 
 =head1 DESTRUCTORS
 
-=head2 DEMOLISH
+=head2 NO Autosave!
+
+Not saying $ASYLUM->close at the end of a program might cause loss of data!
 
 =head1 PUBLIC METHODS
 
@@ -808,3 +859,4 @@ This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
 =cut
+

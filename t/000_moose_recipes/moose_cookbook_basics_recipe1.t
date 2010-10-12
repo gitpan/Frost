@@ -203,7 +203,7 @@ dies_ok {
 #	because the object is incomplete -
 #	i.e. asylum missing!
 #
-$CANVAS->remove;
+#	$CANVAS->remove;
 
 # test some class introspection
 
@@ -313,6 +313,8 @@ foreach my $attr_name (@Point3D_attrs) {
 			'... Attribute ' . $attr_name . ' has an Int type constraint' );
 	}
 }
+
+#DEBUG 'B4 DONE...', Dumper $CANVAS;
 
 diag "DONE";
 
