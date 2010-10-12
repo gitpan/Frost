@@ -4,7 +4,8 @@ package Frost::Burial;
 #
 use Moose;
 
-use DB_File 1.820;
+#	use DB_File 1.820;
+use BerkeleyDB 0.43;
 
 #s	SPEEDFIX: All checks removed: We will never use this module stand-alone...
 #s	Update: Re-introduce some checks...
@@ -18,7 +19,7 @@ use Frost::Util;
 
 #	CLASS VARS
 #
-our $VERSION	= 0.68;
+our $VERSION	= 0.69;
 our $AUTHORITY	= 'cpan:ERNESTO';
 
 #	CLASS METHODS
@@ -28,13 +29,13 @@ sub suffix { die 'Abstract method' }
 #	PUBLIC ATTRIBUTES
 #
 has data_root	=> ( isa => 'Frost::FilePathMustExist',	is => 'ro',								required => true,		);
-has classname	=> ( isa => 'ClassName',			is => 'ro',								required => true,		);
-has slotname	=> ( isa => 'Str',					is => 'ro',								required => true,		);
+has classname	=> ( isa => 'ClassName',						is => 'ro',								required => true,		);
+has slotname	=> ( isa => 'Str',								is => 'ro',								required => true,		);
 
-has filename	=> ( isa => 'Frost::FilePath',				is => 'ro',	init_arg => undef,	lazy_build => true,	);
+has filename	=> ( isa => 'Frost::FilePath',	is => 'ro',	init_arg => undef,	lazy_build => true,	);
 has numeric		=> ( isa => 'Bool', 					is => 'ro',	init_arg => undef,	lazy_build => true,	);
 has unique		=> ( isa => 'Bool',					is => 'ro',	init_arg => undef,	lazy_build => true,	);
-has cachesize	=> ( isa => 'Frost::Natural',				is => 'ro',			default => DEFAULT_CACHESIZE,			);
+has cachesize	=> ( isa => 'Frost::Natural',		is => 'ro',			default => DEFAULT_CACHESIZE,			);
 
 #	PRIVATE ATTRIBUTES
 #
@@ -49,6 +50,13 @@ has _dbm_object	=>
 	is				=> 'rw',
 	isa			=> 'Undef | Frost::DBM_Object',
 #	predicate	=> 'is_open',			#	returns true with undef too !!!
+	default		=> sub { undef },
+);
+
+has _dbm_cursor	=>
+(
+	is				=> 'rw',
+	isa			=> 'Undef | Frost::DBM_Cursor',
 	default		=> sub { undef },
 );
 
@@ -96,6 +104,42 @@ sub DEMOLISH	{ $_[0]->close(); }
 sub is_open			{ ( defined $_[0]->{_dbm_object} ) ? true : false }		#	return 'real' boolean
 sub is_closed		{ ( defined $_[0]->{_dbm_object} ) ? false : true }
 
+#	sub open
+#	{
+#		#IS_DEBUG and DEBUG "( @_ )";
+#
+#		my ( $self )	= @_;
+#
+#		return true		if $self->is_open;
+#
+#		my %dbm_hash;
+#
+#		my $filename	= $self->filename;
+#		my $flags		= O_RDWR|O_CREAT;
+#		my $mode			= 0700;
+#		my $info			= new DB_File::BTREEINFO;
+#
+#		$info->{'flags'} 		= R_DUP						unless $self->unique;
+#		$info->{'cachesize'}	= $self->cachesize;
+#	#	$info->{'compare'}	= \&_numeric_compare		if $self->numeric;
+#	#
+#		my $dbm_object		= tie %dbm_hash, "DB_File", $filename, $flags, $mode, $info
+#												or die "Cannot open $filename: $!\n";
+#
+#		if ( $self->numeric )
+#		{
+#			no warnings;		#	$_ might be undef !!!
+#
+#			$dbm_object->filter_fetch_key  ( sub { $_ = unpack	("i", $_) } );
+#			$dbm_object->filter_store_key  ( sub { $_ = pack	("i", $_) } );
+#		}
+#
+#		$self->_dbm_hash		( \%dbm_hash );
+#		$self->_dbm_object	( $dbm_object );
+#
+#		return true;
+#	}
+
 sub open
 {
 	#IS_DEBUG and DEBUG "( @_ )";
@@ -107,24 +151,18 @@ sub open
 	my %dbm_hash;
 
 	my $filename	= $self->filename;
-	my $flags		= O_RDWR|O_CREAT;
-	my $mode			= 0700;
-	my $info			= new DB_File::BTREEINFO;
 
-	$info->{'flags'} 		= R_DUP						unless $self->unique;
-	$info->{'cachesize'}	= $self->cachesize;
-#	$info->{'compare'}	= \&_numeric_compare		if $self->numeric;
-#
-	my $dbm_object		= tie %dbm_hash, "DB_File", $filename, $flags, $mode, $info
-											or die "Cannot open $filename: $!\n";
+	my $info			= {};
 
-	if ( $self->numeric )
-	{
-		no warnings;		#	$_ might be undef !!!
+	$info->{'-Filename'} 	= $filename;
+	$info->{'-Flags'} 		= DB_CREATE;
+	$info->{'-Mode'} 			= 0700;
+	$info->{'-Property'}		= DB_DUP								unless $self->unique;
+	$info->{'-Cachesize'}	= $self->cachesize;
+	$info->{'-Compare'}		= sub { $_[0] <=> $_[1] }		if $self->numeric;
 
-		$dbm_object->filter_fetch_key  ( sub { $_ = unpack	("i", $_) } );
-		$dbm_object->filter_store_key  ( sub { $_ = pack	("i", $_) } );
-	}
+	my $dbm_object	= tie %dbm_hash, "BerkeleyDB::Btree", %$info
+											or die "Cannot open $filename: $! $BerkeleyDB::Error\n" ;
 
 	$self->_dbm_hash		( \%dbm_hash );
 	$self->_dbm_object	( $dbm_object );
@@ -142,6 +180,7 @@ sub close
 
 	my $dbm_hash	= $self->_dbm_hash;
 
+	$self->_dbm_cursor	( undef );		#	release cursor
 	$self->_dbm_hash		( undef );
 	$self->_dbm_object	( undef );
 
@@ -158,7 +197,7 @@ sub save
 
 	return true			if $self->is_closed;
 
-	my $status	= $self->_dbm_object->sync();
+	my $status	= $self->_dbm_object->db_sync();
 
 	return false		if $status;
 
@@ -335,7 +374,18 @@ sub first
 
 	my $reset_key	= undef;
 
-	@kv			= $self->_seq ( $reset_key, R_FIRST()	);			#	reset cursor...
+#	from DB_File-1.820\DB_File.xs
+#
+#define R_CURSOR        DB_SET_RANGE
+#define R_FIRST         DB_FIRST
+#define R_IAFTER        DB_AFTER
+#define R_IBEFORE       DB_BEFORE
+#define R_LAST          DB_LAST
+#define R_NEXT          DB_NEXT
+#define R_NOOVERWRITE   DB_NOOVERWRITE
+#define R_PREV          DB_PREV
+
+	@kv			= $self->_seq ( $reset_key, DB_FIRST()	);			#	reset cursor...
 
 	#IS_DEBUG and DEBUG 'RESET', Dump [ \@kv ], [qw( kv )];
 
@@ -351,7 +401,7 @@ sub first
 
 	#	we need the partial match here...
 	#
-	@kv			= $self->_seq ( $key, R_CURSOR() );
+	@kv			= $self->_seq ( $key, DB_SET_RANGE() );
 
 	$self->_match_key ( $key, \@kv, \$essence, $match );
 
@@ -375,7 +425,7 @@ sub last
 
 	my $reset_key	= undef;
 
-	@kv			= $self->_seq ( $reset_key, R_LAST()	);			#	reset cursor...
+	@kv			= $self->_seq ( $reset_key, DB_LAST()	);			#	reset cursor...
 
 	#IS_DEBUG and DEBUG 'RESET', Dump [ \@kv ], [qw( kv )];
 
@@ -391,7 +441,7 @@ sub last
 
 	#	we need the partial match here...
 	#
-	@kv			= $self->_seq ( $key, R_CURSOR() );		#	matches FIRST entry!
+	@kv			= $self->_seq ( $key, DB_SET_RANGE() );		#	matches FIRST entry!
 
 	$self->_match_key ( $key, \@kv, \$essence, $match );
 
@@ -413,7 +463,7 @@ sub next
 	my @kv		= ();
 	my $essence	= '';
 
-	@kv			= $self->_seq ( $key, R_NEXT()	);
+	@kv			= $self->_seq ( $key, DB_NEXT()	);
 
 	unless ( defined $key )
 	{
@@ -443,7 +493,7 @@ sub prev
 	my @kv		= ();
 	my $essence	= '';
 
-	@kv			= $self->_seq ( $key, R_PREV()	);
+	@kv			= $self->_seq ( $key, DB_PREV()	);
 
 	unless ( defined $key )
 	{
@@ -474,21 +524,42 @@ sub _seq
 		#
 		#	find is called from outside, i.e. via Frost::Asylum::find
 		#
-		return ( wantarray ? () : '' )		unless $self->_check_key ( $key );
+#		return ( wantarray ? () : '' )		unless $self->_check_key ( $key );
+#
+		unless ( $self->_check_key ( $key ) )
+		{
+			$self->_dbm_cursor ( undef );		#	release cursor
+
+			return ( wantarray ? () : '' );
+		}
 	}
 
 	my ( $seq_key, $seq_value, $status );
 
-	$seq_key		= $key;	#	do not change param!
+	$seq_key		= defined $key ? $key : '';	#	do not change param!		must be defined for BerkeleyDB!
 	$seq_value	= '';
 
-	$status	= $self->_dbm_object->seq ( $seq_key, $seq_value, $cursor );
+#	$status	= $self->_dbm_object->seq ( $seq_key, $seq_value, $cursor );
 
-	#IS_DEBUG and DEBUG 'STATUS', Dump [ $seq_key, $seq_value, $status ], [qw( seq_key seq_value status )];
+	#	reuse cursor or make new one
+	#
+	#	document/test this... always: ->first ... -> next until empty etc.
+	#
+	$self->_dbm_cursor ( $self->_dbm_object->db_cursor() )		unless $self->_dbm_cursor;
+
+	IS_DEBUG and DEBUG 'CURSOR B4', Dump [ $seq_key, $seq_value, $status, $self->_dbm_cursor ], [qw( seq_key seq_value status db_cursor)];
+
+	$status			= $self->_dbm_cursor->c_get ( $seq_key, $seq_value, $cursor );
+
+#	#IS_DEBUG and DEBUG 'STATUS', Dump [ $seq_key, $seq_value, $status ], [qw( seq_key seq_value status )];
+	IS_DEBUG and DEBUG 'CURSOR AF', Dump [ $seq_key, $seq_value, $status, $self->_dbm_cursor ], [qw( seq_key seq_value status db_cursor)];
+
+	$self->_dbm_cursor ( undef )			if $status;									#	release cursor
 
 	return ( wantarray ? () : '' )		if $status;
 
-	$seq_value	= ''			unless defined $seq_value;
+	$self->_dbm_cursor ( undef )			unless defined $seq_value;				#	release cursor
+	$seq_value	= ''							unless defined $seq_value;
 
 	return wantarray ? ( $seq_key, $seq_value ) : $seq_value;
 }

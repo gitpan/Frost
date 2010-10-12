@@ -195,6 +195,16 @@ dies_ok {
 }
 '... z is a required attribute for Point3D';
 
+#	DON'T DO THIS AT HOME!
+#
+#	We are NOT dead - test ist still running -,
+#	so if we do not manually remove the failing
+#	entry here, Locum->save will fail later,
+#	because the object is incomplete -
+#	i.e. asylum missing!
+#
+$CANVAS->remove;
+
 # test some class introspection
 
 can_ok( 'Point', 'meta' );
@@ -304,6 +314,7 @@ foreach my $attr_name (@Point3D_attrs) {
 	}
 }
 
+diag "DONE";
 
 1;
 

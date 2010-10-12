@@ -19,7 +19,7 @@ use Frost::Locum;
 
 #	CLASS VARS
 #
-our $VERSION	= '0.69_01';
+our $VERSION	= '0.69_02';
 $VERSION			= eval $VERSION;
 
 our $AUTHORITY	= 'cpan:ERNESTO';

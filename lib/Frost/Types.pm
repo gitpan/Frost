@@ -99,10 +99,15 @@ subtype 'Frost::UniqueId'
 
 subtype 'Frost::DBM_Object'
 	=> as 'Object'
-	=> where { $_->isa ( 'DB_File' ) };
+#	=> where { $_->isa ( 'DB_File' ) };
+	=> where { $_->isa ( 'BerkeleyDB::Btree' ) };
 
 subtype 'Frost::DBM_Hash'
 	=> as 'HashRef';
+
+subtype 'Frost::DBM_Cursor'
+	=> as 'Object'
+	=> where { $_->isa ( 'BerkeleyDB::Cursor' ) };
 
 #######################################
 

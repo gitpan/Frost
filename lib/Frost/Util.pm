@@ -19,7 +19,8 @@ use Exporter;
 #	LIBS
 #
 use Log::Log4perl	1.24		qw(:levels get_logger);
-use DB_File			1.820;
+use BerkeleyDB		0.43		();
+#	use DB_File			1.820;
 use Fcntl			1.05		qw( :DEFAULT :flock );
 use File::Path		2.04		();
 use Time::HiRes	1.9719	qw(usleep);
@@ -144,8 +145,9 @@ sub UUID_BAD_TAG				()	{ 'UBAD-UBAD-UBAD-UBAD-UBAD' }
 
 #	see DB_File-1.820/t/db-btree.t
 #
-use constant NULL_KEYS_ALLOWED	=> ( $DB_File::db_ver < 2.004010 || $DB_File::db_ver >= 3.1 );
-#use constant NULL_KEYS_ALLOWED	=> false;			#	TEST!!!
+#	use constant NULL_KEYS_ALLOWED	=> ( $DB_File::db_ver < 2.004010 || $DB_File::db_ver >= 3.1 );
+#	#use constant NULL_KEYS_ALLOWED	=> false;			#	TEST!!!
+use constant NULL_KEYS_ALLOWED	=> ( $BerkeleyDB::db_version < 2.004010 || $BerkeleyDB::db_version >= 3.1 );
 
 #	Be careful in the china store:
 #

@@ -1,6 +1,14 @@
 Revision history for Frost
 
-0.68_01	October 8, 2010
+0.69_02	October 12, 2010
+	-	replaced DB_File with BerkeleyDB
+		many changes
+	-	Burial
+		new attribute _dbm_cursor
+	-	Types
+		new subtype 'Frost::DBM_Cursor' -> 'BerkeleyDB::Cursor'
+
+0.69_01	October 8, 2010
 	-	removed check_db.PL from Makefile.PL to see,
 		if Frost::Burial::filter_* helps on *BSD with BDB 1.0
 

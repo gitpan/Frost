@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               Frost
-version:            0.69_01
+version:            0.69_02
 abstract:           Feasible Referential Object STorage
 author:
     - Ernesto <ernesto@dienstleistung-kultur.de>
@@ -11,12 +11,12 @@ configure_requires:
 build_requires:
     ExtUtils::MakeMaker:  0
 requires:
+    BerkeleyDB:           0.43
     Carp:                 1.04
     Class::MOP:           1.08
     Data::Dumper:         1.125
     Data::UUID:           1.202
     DateTime::Format::MySQL:  0
-    DB_File:              1.82
     Exporter:             0
     Fcntl:                1.05
     File::Path:           2.04
