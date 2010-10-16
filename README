@@ -1,5 +1,10 @@
-Frost version 0.65
-===========================
+Frost version 0.70
+==================
+
+Feasible Referential Object STorage
+
+Frost is an extension of Moose providing persistence even to circular
+structures like trees or loops.
 
 See the individual module documentation for more information
 
@@ -7,33 +12,55 @@ INSTALLATION
 
 To install this module type the following:
 
-   perl Makefile.PL
-   make
-   make test
-   make install
+	perl Makefile.PL
+	make
+	make test
+	make install
 
 DEPENDENCIES
 
 This module requires these other modules and libraries:
 
+	BerkeleyDB
 	Carp
 	Class::MOP
 	Data::Dumper
 	Data::UUID
-	DateTime::Format::MySQL
-	DB_File
 	Exporter
 	Fcntl
 	File::Path
 	IO::File
-	List::Util
 	Log::Log4perl
 	Moose
+	Scalar::Util
 	Storable
-	Test::Deep
-	Test::Exception
-	Tie::Cache::LRU::Array
+	Tie::Cache::LRU
 	Time::HiRes
+
+For testing these modules are needed:
+
+	DateTime::Format::MySQL
+	List::Util
+	List::MoreUtils
+	Test::Deep
+	Test::Differences
+	Test::Exception
+	Test::More
+	Test::Requires
+
+Optional modules to run some tests:
+
+	Devel::Size
+	Sys::MemInfo
+	Declare::Constraints::Simple
+	Regexp::Common
+	Locale::US
+
+Please see Makefile.PL for required versions.
+
+AUTHOR
+
+Ernesto <ernesto@dienstleistung-kultur.de>
 
 COPYRIGHT AND LICENCE
 

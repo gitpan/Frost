@@ -19,7 +19,7 @@ use Frost::Locum;
 
 #	CLASS VARS
 #
-our $VERSION	= '0.69_03';
+our $VERSION	= '0.70';
 $VERSION			= eval $VERSION;
 
 our $AUTHORITY	= 'cpan:ERNESTO';
@@ -861,11 +861,11 @@ L<moose-subscribe@perl.org>
 
 This module requires these other modules and libraries:
 
+	BerkeleyDB
 	Carp
 	Class::MOP
 	Data::Dumper
 	Data::UUID
-	DB_File
 	Exporter
 	Fcntl
 	File::Path
@@ -886,6 +886,7 @@ For testing these modules are needed:
 	Test::Differences
 	Test::Exception
 	Test::More
+	Test::Requires
 
 Optional modules to run some tests:
 

@@ -19,7 +19,7 @@ use Frost::Util;
 
 #	CLASS VARS
 #
-our $VERSION	= 0.69;
+our $VERSION	= 0.70;
 our $AUTHORITY	= 'cpan:ERNESTO';
 
 #	CLASS METHODS
@@ -134,6 +134,17 @@ sub BUILDARGS
 #		print STDERR __PACKAGE__ . "::DEMOLISH done\n\n";
 #	}
 
+#	0.70	in again for untie!
+#
+sub DEMOLISH
+{
+	#print STDERR __PACKAGE__ . "::DEMOLISH ( @_ )\n";
+
+	$_[0]->close ( 1 );		#	flag $from_demolish...
+
+	#print STDERR __PACKAGE__ . "::DEMOLISH done\n\n";
+}
+
 #	PUBLIC METHODS
 #
 sub is_open			{ ( defined $_[0]->{_dbm_object} ) ? true : false }		#	return 'real' boolean
@@ -205,17 +216,42 @@ sub open
 	return true;
 }
 
+#	sub close
+#	{
+#		#IS_DEBUG and DEBUG "( @_ )";
+#
+#		my ( $self, $igd )	= @_;
+#
+#		#print STDERR __PACKAGE__ . "::close", Dump [ $self->is_closed, $self->filename, $igd ], [qw( is_closed filename in_global_destruction )];
+#
+#		return true		if $self->is_closed;
+#
+#		$self->save ( $igd );
+#
+#		my $dbm_hash	= $self->_dbm_hash;
+#
+#		$self->_dbm_cursor	( undef );		#	release cursor
+#		$self->_dbm_hash		( undef );
+#		$self->_dbm_object	( undef );
+#
+#		untie %$dbm_hash;
+#
+#		#print STDERR __PACKAGE__ . "::close done\n\n";
+#
+#		return true;
+#	}
+
 sub close
 {
 	#IS_DEBUG and DEBUG "( @_ )";
 
-	my ( $self, $igd )	= @_;
+	my ( $self, $from_demolish )	= @_;
 
-	#print STDERR __PACKAGE__ . "::close", Dump [ $self->is_closed, $self->filename, $igd ], [qw( is_closed filename in_global_destruction )];
+	#print STDERR __PACKAGE__ . "::close", Dump [ $self->is_closed, $self->filename, $from_demolish ], [qw( is_closed filename from_demolish )];
 
 	return true		if $self->is_closed;
 
-	$self->save ( $igd );
+	$self->save()		unless $from_demolish;
 
 	my $dbm_hash	= $self->_dbm_hash;
 
@@ -230,13 +266,36 @@ sub close
 	return true;
 }
 
+#	sub save
+#	{
+#		#IS_DEBUG and DEBUG "( @_ )";
+#
+#		my ( $self, $igd )	= @_;
+#
+#		#print STDERR __PACKAGE__ . "::save", Dump [ $self->is_closed, $self->filename, $igd ], [qw( is_closed filename in_global_destruction )];
+#
+#		return true			if $self->is_closed;
+#
+#		#print STDERR __PACKAGE__ . "::save B4 sync...\n";
+#
+#		my $status	= $self->_dbm_object->db_sync();
+#
+#		#print STDERR __PACKAGE__ . "::save AF sync... status=", ( $status ? $status : 'OK' ), "\n";
+#
+#		return false		if $status;
+#
+#		#print STDERR __PACKAGE__ . "::save done\n\n";
+#
+#		return true;
+#	}
+
 sub save
 {
 	#IS_DEBUG and DEBUG "( @_ )";
 
-	my ( $self, $igd )	= @_;
+	my ( $self )	= @_;
 
-	#print STDERR __PACKAGE__ . "::save", Dump [ $self->is_closed, $self->filename, $igd ], [qw( is_closed filename in_global_destruction )];
+	#print STDERR __PACKAGE__ . "::save", Dump [ $self->is_closed, $self->filename ], [qw( is_closed filename )];
 
 	return true			if $self->is_closed;
 
